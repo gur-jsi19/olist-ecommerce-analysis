@@ -1,0 +1,127 @@
+OLIST RAW DATA INSPECTION
+All columns loaded as text for initial inspection.
+Duplicate counts represent repeated complete rows.
+
+FILE: olist_customers_dataset.csv
+Rows: 99,441
+Columns: 5
+Duplicate rows beyond first occurrence: 0
+
+                          missing_values  distinct_non_missing_values
+column                                                               
+customer_id                            0                        99441
+customer_unique_id                     0                        96096
+customer_zip_code_prefix               0                        14994
+customer_city                          0                         4119
+customer_state                         0                           27
+
+FILE: olist_geolocation_dataset.csv
+Rows: 1,000,163
+Columns: 5
+Duplicate rows beyond first occurrence: 261,831
+
+                             missing_values  distinct_non_missing_values
+column                                                                  
+geolocation_zip_code_prefix               0                        19015
+geolocation_lat                           0                       717372
+geolocation_lng                           0                       717615
+geolocation_city                          0                         8011
+geolocation_state                         0                           27
+
+FILE: olist_order_items_dataset.csv
+Rows: 112,650
+Columns: 7
+Duplicate rows beyond first occurrence: 0
+
+                     missing_values  distinct_non_missing_values
+column                                                          
+order_id                          0                        98666
+order_item_id                     0                           21
+product_id                        0                        32951
+seller_id                         0                         3095
+shipping_limit_date               0                        93318
+price                             0                         5968
+freight_value                     0                         6999
+
+FILE: olist_order_payments_dataset.csv
+Rows: 103,886
+Columns: 5
+Duplicate rows beyond first occurrence: 0
+
+                      missing_values  distinct_non_missing_values
+column                                                           
+order_id                           0                        99440
+payment_sequential                 0                           29
+payment_type                       0                            5
+payment_installments               0                           24
+payment_value                      0                        29077
+
+FILE: olist_order_reviews_dataset.csv
+Rows: 99,224
+Columns: 7
+Duplicate rows beyond first occurrence: 0
+
+                         missing_values  distinct_non_missing_values
+column                                                              
+review_id                             0                        98410
+order_id                              0                        98673
+review_score                          0                            5
+review_comment_title              87656                         4527
+review_comment_message            58247                        36159
+review_creation_date                  0                          636
+review_answer_timestamp               0                        98248
+
+FILE: olist_orders_dataset.csv
+Rows: 99,441
+Columns: 8
+Duplicate rows beyond first occurrence: 0
+
+                               missing_values  distinct_non_missing_values
+column                                                                    
+order_id                                    0                        99441
+customer_id                                 0                        99441
+order_status                                0                            8
+order_purchase_timestamp                    0                        98875
+order_approved_at                         160                        90733
+order_delivered_carrier_date             1783                        81018
+order_delivered_customer_date            2965                        95664
+order_estimated_delivery_date               0                          459
+
+FILE: olist_products_dataset.csv
+Rows: 32,951
+Columns: 9
+Duplicate rows beyond first occurrence: 0
+
+                            missing_values  distinct_non_missing_values
+column                                                                 
+product_id                               0                        32951
+product_category_name                  610                           73
+product_name_lenght                    610                           66
+product_description_lenght             610                         2960
+product_photos_qty                     610                           19
+product_weight_g                         2                         2204
+product_length_cm                        2                           99
+product_height_cm                        2                          102
+product_width_cm                         2                           95
+
+FILE: olist_sellers_dataset.csv
+Rows: 3,095
+Columns: 4
+Duplicate rows beyond first occurrence: 0
+
+                        missing_values  distinct_non_missing_values
+column                                                             
+seller_id                            0                         3095
+seller_zip_code_prefix               0                         2246
+seller_city                          0                          611
+seller_state                         0                           23
+
+FILE: product_category_name_translation.csv
+Rows: 71
+Columns: 2
+Duplicate rows beyond first occurrence: 0
+
+                               missing_values  distinct_non_missing_values
+column                                                                    
+product_category_name                       0                           71
+product_category_name_english               0                           71

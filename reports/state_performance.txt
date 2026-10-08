@@ -1,0 +1,100 @@
+/******** QUERY *********/
+BEGIN;
+/************************/
+
+BEGIN
+/******** QUERY *********/
+CREATE OR REPLACE VIEW customer_state_summary AS
+SELECT
+    customer_state,
+    COUNT(*) AS delivered_orders,
+    SUM(merchandise_value_cents) AS merchandise_sales_cents,
+    COUNT(*) FILTER (
+        WHERE is_delivery_analysis_eligible
+    ) AS eligible_delivery_orders,
+    COUNT(*) FILTER (
+        WHERE is_delivery_analysis_eligible
+          AND late_delivery
+    ) AS late_orders,
+    AVG(purchase_to_delivery_days) FILTER (
+        WHERE is_delivery_analysis_eligible
+    ) AS avg_delivery_days
+FROM order_analytics
+WHERE is_delivered
+GROUP BY customer_state;
+/************************/
+
+CREATE VIEW
+/******** QUERY *********/
+SELECT
+    customer_state,
+    delivered_orders,
+    ROUND(
+        merchandise_sales_cents / 100.0, 2
+    ) AS merchandise_sales_brl,
+    ROUND(
+        100.0 * merchandise_sales_cents
+        / NULLIF(SUM(merchandise_sales_cents) OVER (), 0),
+        2
+    ) AS sales_share_pct
+FROM customer_state_summary
+ORDER BY merchandise_sales_cents DESC, customer_state
+LIMIT 10;
+/************************/
+
+ customer_state | delivered_orders | merchandise_sales_brl | sales_share_pct 
+----------------+------------------+-----------------------+-----------------
+ SP             |            40501 |            5067633.16 |           38.33
+ RJ             |            12350 |            1759651.13 |           13.31
+ MG             |            11354 |            1552481.83 |           11.74
+ RS             |             5345 |             728897.47 |            5.51
+ PR             |             4923 |             666063.51 |            5.04
+ SC             |             3546 |             507012.13 |            3.83
+ BA             |             3256 |             493584.14 |            3.73
+ DF             |             2080 |             296498.41 |            2.24
+ GO             |             1957 |             282836.70 |            2.14
+ ES             |             1995 |             268643.45 |            2.03
+(10 rows)
+
+/******** QUERY *********/
+SELECT
+    customer_state,
+    eligible_delivery_orders,
+    late_orders,
+    ROUND(
+        100.0 * late_orders
+        / NULLIF(eligible_delivery_orders, 0),
+        2
+    ) AS late_delivery_pct,
+    ROUND(
+        avg_delivery_days, 2
+    ) AS avg_purchase_to_delivery_days
+FROM customer_state_summary
+WHERE eligible_delivery_orders >= 500
+ORDER BY
+    100.0 * late_orders
+        / NULLIF(eligible_delivery_orders, 0) DESC,
+    eligible_delivery_orders DESC,
+    customer_state
+LIMIT 10;
+/************************/
+
+ customer_state | eligible_delivery_orders | late_orders | late_delivery_pct | avg_purchase_to_delivery_days 
+----------------+--------------------------+-------------+-------------------+-------------------------------
+ MA             |                      717 |         125 |             17.43 |                         21.57
+ CE             |                     1279 |         176 |             13.76 |                         21.27
+ BA             |                     3256 |         396 |             12.16 |                         19.34
+ RJ             |                    12350 |        1495 |             12.11 |                         15.31
+ PA             |                      946 |         106 |             11.21 |                         23.77
+ ES             |                     1995 |         214 |             10.73 |                         15.79
+ PB             |                      517 |          54 |             10.44 |                         20.43
+ MS             |                      701 |          68 |              9.70 |                         15.62
+ PE             |                     1593 |         153 |              9.60 |                         18.45
+ SC             |                     3546 |         291 |              8.21 |                         14.95
+(10 rows)
+
+/******** QUERY *********/
+COMMIT;
+/************************/
+
+COMMIT

@@ -1,0 +1,15 @@
+.venv/
+__pycache__/
+*.pyc
+.DS_Store
+.env
+
+# Source data and generated datasets
+data/raw/
+data/processed/
+data/powerbi/
+
+# Database backups and archives
+*.dump
+*.backup
+*.zip

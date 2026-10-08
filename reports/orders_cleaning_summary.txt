@@ -1,0 +1,16 @@
+ORDERS CLEANING SUMMARY
+Input rows: 99,441
+Output rows: 99,441
+Delivered orders: 96,478
+Eligible for delivery analysis: 96,470
+Delivered orders excluded from delivery analysis: 8
+Late orders among eligible orders: 6,534
+
+TIMELINE FLAGS — RECORDS RETAINED
+flag_approval_after_carrier: 1,359
+flag_carrier_after_delivery: 23
+flag_delivery_before_purchase: 0
+
+Delivered-order purchase date range:
+First: 2016-09-15 12:16:38
+Last: 2018-08-29 15:00:37

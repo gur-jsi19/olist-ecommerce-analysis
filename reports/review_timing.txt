@@ -1,0 +1,97 @@
+/******** QUERY *********/
+BEGIN;
+/************************/
+
+BEGIN
+/******** QUERY *********/
+SELECT
+    CASE
+        WHEN o.late_delivery THEN 'Late'
+        ELSE 'On time'
+    END AS delivery_group,
+    COUNT(*) AS review_records,
+    COUNT(*) FILTER (
+        WHERE r.review_answer_timestamp
+            < o.order_delivered_customer_date
+    ) AS pre_delivery_reviews,
+    ROUND(
+        100.0 * COUNT(*) FILTER (
+            WHERE r.review_answer_timestamp
+                < o.order_delivered_customer_date
+        ) / NULLIF(COUNT(*), 0),
+        2
+    ) AS pre_delivery_review_pct
+FROM order_analytics AS o
+JOIN order_reviews AS r
+    ON o.order_id = r.order_id
+WHERE o.is_delivery_analysis_eligible
+GROUP BY o.late_delivery
+ORDER BY o.late_delivery;
+/************************/
+
+ delivery_group | review_records | pre_delivery_reviews | pre_delivery_review_pct 
+----------------+----------------+----------------------+-------------------------
+ On time        |          89944 |                  295 |                    0.33
+ Late           |           6409 |                 4499 |                   70.20
+(2 rows)
+
+/******** QUERY *********/
+CREATE OR REPLACE VIEW order_post_delivery_reviews AS
+SELECT
+    r.order_id,
+    COUNT(*) AS post_delivery_review_count,
+    AVG(r.review_score) AS post_delivery_mean_score,
+    BOOL_OR(
+        r.review_score <= 2
+    ) AS post_delivery_has_low_review
+FROM order_reviews AS r
+JOIN orders AS o
+    ON r.order_id = o.order_id
+WHERE o.is_delivery_analysis_eligible
+  AND r.review_answer_timestamp
+      >= o.order_delivered_customer_date
+GROUP BY r.order_id;
+/************************/
+
+CREATE VIEW
+/******** QUERY *********/
+SELECT
+    CASE
+        WHEN o.late_delivery THEN 'Late'
+        ELSE 'On time'
+    END AS delivery_group,
+    COUNT(*) AS eligible_orders,
+    COUNT(p.order_id) AS orders_with_post_review,
+    ROUND(
+        100.0 * COUNT(p.order_id)
+        / NULLIF(COUNT(*), 0),
+        2
+    ) AS post_review_coverage_pct,
+    ROUND(
+        AVG(p.post_delivery_mean_score), 2
+    ) AS avg_post_review_score,
+    ROUND(
+        100.0 * COUNT(*) FILTER (
+            WHERE p.post_delivery_has_low_review
+        ) / NULLIF(COUNT(p.order_id), 0),
+        2
+    ) AS post_low_review_pct
+FROM order_analytics AS o
+LEFT JOIN order_post_delivery_reviews AS p
+    ON o.order_id = p.order_id
+WHERE o.is_delivery_analysis_eligible
+GROUP BY o.late_delivery
+ORDER BY o.late_delivery;
+/************************/
+
+ delivery_group | eligible_orders | orders_with_post_review | post_review_coverage_pct | avg_post_review_score | post_low_review_pct 
+----------------+-----------------+-------------------------+--------------------------+-----------------------+---------------------
+ On time        |           89936 |                   89263 |                    99.25 |                  4.29 |                9.28
+ Late           |            6534 |                    1908 |                    29.20 |                  3.72 |               19.44
+(2 rows)
+
+/******** QUERY *********/
+COMMIT;
+/************************/
+
+COMMIT

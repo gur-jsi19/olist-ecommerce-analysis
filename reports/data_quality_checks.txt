@@ -1,0 +1,92 @@
+OLIST DATA QUALITY CHECKS
+
+ORDER STATUS COUNTS
+order_status
+delivered      96478
+shipped         1107
+canceled         625
+unavailable      609
+invoiced         314
+processing       301
+created            5
+approved           2
+
+DATE PARSING
+order_purchase_timestamp: 0 invalid non-missing values
+order_approved_at: 0 invalid non-missing values
+order_delivered_carrier_date: 0 invalid non-missing values
+order_delivered_customer_date: 0 invalid non-missing values
+order_estimated_delivery_date: 0 invalid non-missing values
+
+PURCHASE DATE RANGE
+First: 2016-09-04 21:15:19
+Last: 2018-10-17 17:30:18
+
+MISSING OR INVALID DATES BY ORDER STATUS
+              order_purchase_timestamp  order_approved_at  order_delivered_carrier_date  order_delivered_customer_date  order_estimated_delivery_date
+order_status                                                                                                                                         
+approved                             0                  0                             2                              2                              0
+canceled                             0                141                           550                            619                              0
+created                              0                  5                             5                              5                              0
+delivered                            0                 14                             2                              8                              0
+invoiced                             0                  0                           314                            314                              0
+processing                           0                  0                           301                            301                              0
+shipped                              0                  0                             0                           1107                              0
+unavailable                          0                  0                           609                            609                              0
+
+RELATED RECORD COVERAGE BY ORDER STATUS
+              orders  without_items  without_payments  without_reviews
+order_status                                                          
+approved           2              0                 0                0
+canceled         625            164                 0               20
+created            5              5                 0                2
+delivered      96478              0                 1              646
+invoiced         314              2                 0                5
+processing       301              0                 0                6
+shipped         1107              1                 0               75
+unavailable      609            603                 0               14
+
+TIMELINE FLAGS
+purchase_after_approval: 0
+approval_after_carrier_handoff: 1,359
+carrier_handoff_after_customer_delivery: 23
+purchase_after_estimated_delivery: 0
+
+NUMERIC VALUE CHECKS
+items.price
+  Missing source values: 0
+  Invalid non-missing numbers: 0
+  Minimum: 0.85
+  Maximum: 6735.0
+  Negative values: 0
+  Zero values: 0
+items.freight_value
+  Missing source values: 0
+  Invalid non-missing numbers: 0
+  Minimum: 0.0
+  Maximum: 409.68
+  Negative values: 0
+  Zero values: 383
+payments.payment_value
+  Missing source values: 0
+  Invalid non-missing numbers: 0
+  Minimum: 0.0
+  Maximum: 13664.08
+  Negative values: 0
+  Zero values: 9
+payments.payment_installments
+  Missing source values: 0
+  Invalid non-missing numbers: 0
+  Minimum: 0
+  Maximum: 24
+  Negative values: 0
+  Zero values: 2
+reviews.review_score
+  Missing source values: 0
+  Invalid non-missing numbers: 0
+  Minimum: 1
+  Maximum: 5
+  Negative values: 0
+  Zero values: 0
+
+Review scores outside 1–5: 0

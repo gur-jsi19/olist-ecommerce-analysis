@@ -1,0 +1,10 @@
+REVIEW CLEANING SUMMARY
+Input review rows: 99,224
+Output review rows: 99,224
+Reviewed orders: 98,673
+Orders with multiple reviews: 547
+Orders with differing review scores: 202
+Orders with any score of 1 or 2: 14,533
+Reviews with written feedback: 42,687
+
+All reviews retained. Summary contains one row per reviewed order.

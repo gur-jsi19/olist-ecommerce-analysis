@@ -1,0 +1,79 @@
+/******** QUERY *********/
+BEGIN;
+/************************/
+
+BEGIN
+/******** QUERY *********/
+CREATE OR REPLACE VIEW category_sales_summary AS
+SELECT
+    p.product_category_label AS category,
+    COUNT(*) AS item_count,
+    COUNT(DISTINCT i.order_id) AS orders_with_category,
+    SUM(i.price_cents) AS merchandise_sales_cents
+FROM order_items AS i
+JOIN orders AS o
+    ON i.order_id = o.order_id
+JOIN products AS p
+    ON i.product_id = p.product_id
+WHERE o.is_delivered
+GROUP BY p.product_category_label;
+/************************/
+
+CREATE VIEW
+/******** QUERY *********/
+SELECT
+    category,
+    item_count,
+    orders_with_category,
+    ROUND(
+        merchandise_sales_cents / 100.0, 2
+    ) AS merchandise_sales_brl,
+    ROUND(
+        100.0 * merchandise_sales_cents
+        / NULLIF(SUM(merchandise_sales_cents) OVER (), 0),
+        2
+    ) AS sales_share_pct
+FROM category_sales_summary
+ORDER BY merchandise_sales_cents DESC, category
+LIMIT 10;
+/************************/
+
+       category        | item_count | orders_with_category | merchandise_sales_brl | sales_share_pct 
+-----------------------+------------+----------------------+-----------------------+-----------------
+ health_beauty         |       9465 |                 8647 |            1233131.72 |            9.33
+ watches_gifts         |       5859 |                 5495 |            1166176.98 |            8.82
+ bed_bath_table        |      10953 |                 9272 |            1023434.76 |            7.74
+ sports_leisure        |       8431 |                 7530 |             954852.55 |            7.22
+ computers_accessories |       7644 |                 6530 |             888724.61 |            6.72
+ furniture_decor       |       8160 |                 6307 |             711927.69 |            5.38
+ housewares            |       6795 |                 5743 |             615628.69 |            4.66
+ cool_stuff            |       3718 |                 3559 |             610204.10 |            4.62
+ auto                  |       4140 |                 3810 |             578966.65 |            4.38
+ toys                  |       4030 |                 3804 |             471286.48 |            3.56
+(10 rows)
+
+/******** QUERY *********/
+SELECT
+    SUM(item_count) = (
+        SELECT SUM(item_count)
+        FROM order_analytics
+        WHERE is_delivered
+    ) AS item_count_preserved,
+    SUM(merchandise_sales_cents) = (
+        SELECT SUM(merchandise_value_cents)
+        FROM order_analytics
+        WHERE is_delivered
+    ) AS merchandise_total_preserved
+FROM category_sales_summary;
+/************************/
+
+ item_count_preserved | merchandise_total_preserved 
+----------------------+-----------------------------
+ t                    | t
+(1 row)
+
+/******** QUERY *********/
+COMMIT;
+/************************/
+
+COMMIT

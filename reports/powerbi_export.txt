@@ -1,0 +1,40 @@
+/******** QUERY *********/
+BEGIN TRANSACTION ISOLATION LEVEL REPEATABLE READ READ ONLY;
+/************************/
+
+BEGIN
+/******** QUERY *********/
+SET LOCAL DateStyle = 'ISO, YMD';
+/************************/
+
+SET
+/******** QUERY *********/
+COPY  ( SELECT * FROM powerbi_orders ORDER BY order_id ) TO STDOUT WITH (FORMAT csv, HEADER true, ENCODING 'UTF8')
+/************************/
+
+COPY 99441
+/******** QUERY *********/
+COPY  ( SELECT * FROM powerbi_order_items ORDER BY order_id, order_item_id ) TO STDOUT WITH (FORMAT csv, HEADER true, ENCODING 'UTF8')
+/************************/
+
+COPY 112650
+/******** QUERY *********/
+COPY  ( SELECT * FROM powerbi_dates ORDER BY date ) TO STDOUT WITH (FORMAT csv, HEADER true, ENCODING 'UTF8')
+/************************/
+
+COPY 1096
+/******** QUERY *********/
+COPY  ( SELECT * FROM powerbi_states ORDER BY customer_state ) TO STDOUT WITH (FORMAT csv, HEADER true, ENCODING 'UTF8')
+/************************/
+
+COPY 27
+/******** QUERY *********/
+COPY  ( SELECT * FROM powerbi_products ORDER BY product_id ) TO STDOUT WITH (FORMAT csv, HEADER true, ENCODING 'UTF8')
+/************************/
+
+COPY 32951
+/******** QUERY *********/
+COMMIT;
+/************************/
+
+COMMIT

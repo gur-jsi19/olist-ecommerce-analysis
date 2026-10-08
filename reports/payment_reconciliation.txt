@@ -1,0 +1,47 @@
+/******** QUERY *********/
+WITH classified_orders AS (
+    SELECT
+        *,
+        CASE
+            WHEN NOT has_payment THEN 'Missing payment'
+            WHEN NOT has_items THEN 'Missing items'
+            WHEN payment_difference_cents = 0 THEN 'Exact match'
+            WHEN ABS(payment_difference_cents) <= 1
+                THEN 'Difference of 1 cent'
+            WHEN ABS(payment_difference_cents) <= 100
+                THEN 'Difference of 2–100 cents'
+            ELSE 'Difference above BRL 1'
+        END AS reconciliation_group
+    FROM order_analytics
+    WHERE is_delivered
+)
+SELECT
+    reconciliation_group,
+    COUNT(*) AS orders,
+    ROUND(
+        100.0 * COUNT(*)
+        / NULLIF(SUM(COUNT(*)) OVER (), 0),
+        2
+    ) AS order_share_pct,
+    ROUND(
+        SUM(ABS(payment_difference_cents)) / 100.0,
+        2
+    ) AS total_absolute_difference_brl,
+    ROUND(
+        MAX(ABS(payment_difference_cents)) / 100.0,
+        2
+    ) AS max_absolute_difference_brl
+FROM classified_orders
+GROUP BY reconciliation_group
+ORDER BY reconciliation_group;
+/************************/
+
+   reconciliation_group    | orders | order_share_pct | total_absolute_difference_brl | max_absolute_difference_brl 
+---------------------------+--------+-----------------+-------------------------------+-----------------------------
+ Difference above BRL 1    |    246 |            0.25 |                       3224.33 |                      182.81
+ Difference of 1 cent      |    270 |            0.28 |                          2.70 |                        0.01
+ Difference of 2–100 cents |     53 |            0.05 |                          5.97 |                        1.00
+ Exact match               |  95908 |           99.41 |                          0.00 |                        0.00
+ Missing payment           |      1 |            0.00 |                               |                            
+(5 rows)
+

@@ -1,0 +1,81 @@
+/******** QUERY *********/
+SELECT
+    COUNT(*) AS delivered_orders,
+    COUNT(DISTINCT customer_unique_id) AS distinct_buyers,
+    MIN(order_purchase_timestamp)::date AS first_purchase_date,
+    MAX(order_purchase_timestamp)::date AS last_purchase_date,
+    ROUND(
+        SUM(merchandise_value_cents) / 100.0, 2
+    ) AS merchandise_sales_brl,
+    ROUND(
+        SUM(freight_value_cents) / 100.0, 2
+    ) AS freight_value_brl,
+    ROUND(
+        AVG(merchandise_value_cents) / 100.0, 2
+    ) AS avg_merchandise_value_per_order_brl
+FROM order_analytics
+WHERE is_delivered;
+/************************/
+
+ delivered_orders | distinct_buyers | first_purchase_date | last_purchase_date | merchandise_sales_brl | freight_value_brl | avg_merchandise_value_per_order_brl 
+------------------+-----------------+---------------------+--------------------+-----------------------+-------------------+-------------------------------------
+            96478 |           93358 | 2016-09-15          | 2018-08-29         |           13221498.11 |        2198275.64 |                              137.04
+(1 row)
+
+/******** QUERY *********/
+SELECT
+    COUNT(*) AS eligible_orders,
+    COUNT(*) FILTER (
+        WHERE late_delivery
+    ) AS late_orders,
+    COUNT(*) FILTER (
+        WHERE NOT late_delivery
+    ) AS on_time_orders,
+    ROUND(
+        100.0 * COUNT(*) FILTER (WHERE late_delivery)
+        / NULLIF(COUNT(*), 0), 2
+    ) AS late_delivery_pct,
+    ROUND(
+        AVG(purchase_to_delivery_days), 2
+    ) AS avg_purchase_to_delivery_days,
+    ROUND(
+        AVG(days_late) FILTER (WHERE late_delivery), 2
+    ) AS avg_days_late_among_late_orders
+FROM order_analytics
+WHERE is_delivery_analysis_eligible;
+/************************/
+
+ eligible_orders | late_orders | on_time_orders | late_delivery_pct | avg_purchase_to_delivery_days | avg_days_late_among_late_orders 
+-----------------+-------------+----------------+-------------------+-------------------------------+---------------------------------
+           96470 |        6534 |          89936 |              6.77 |                         12.56 |                           10.62
+(1 row)
+
+/******** QUERY *********/
+SELECT
+    COUNT(*) AS delivered_orders,
+    COUNT(*) FILTER (
+        WHERE has_review
+    ) AS reviewed_orders,
+    ROUND(
+        100.0 * COUNT(*) FILTER (WHERE has_review)
+        / NULLIF(COUNT(*), 0), 2
+    ) AS review_coverage_pct,
+    ROUND(
+        AVG(mean_review_score), 2
+    ) AS avg_order_review_score,
+    COUNT(*) FILTER (
+        WHERE has_low_review
+    ) AS orders_with_any_low_review,
+    ROUND(
+        100.0 * COUNT(*) FILTER (WHERE has_low_review)
+        / NULLIF(COUNT(*) FILTER (WHERE has_review), 0), 2
+    ) AS orders_with_any_low_review_pct
+FROM order_analytics
+WHERE is_delivered;
+/************************/
+
+ delivered_orders | reviewed_orders | review_coverage_pct | avg_order_review_score | orders_with_any_low_review | orders_with_any_low_review_pct 
+------------------+-----------------+---------------------+------------------------+----------------------------+--------------------------------
+            96478 |           95832 |               99.33 |                   4.16 |                      12311 |                          12.85
+(1 row)
+

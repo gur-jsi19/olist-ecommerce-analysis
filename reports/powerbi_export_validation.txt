@@ -1,0 +1,43 @@
+POWER BI EXPORT VALIDATION
+powerbi_orders.csv: 99,441 rows
+powerbi_order_items.csv: 112,650 rows
+powerbi_dates.csv: 1,096 rows
+powerbi_states.csv: 27 rows
+powerbi_products.csv: 32,951 rows
+
+Passed checks: 28
+Delivered orders: 96,478
+Eligible delivery orders: 96,470
+Late orders: 6,534
+Delivered merchandise sales: BRL 13,221,498.11
+RESULT: ALL CHECKS PASSED
+
+CHECK DETAILS
+PASS: powerbi_orders.csv: expected row count
+PASS: powerbi_orders.csv: no missing key components
+PASS: powerbi_orders.csv: unique key
+PASS: powerbi_order_items.csv: expected row count
+PASS: powerbi_order_items.csv: no missing key components
+PASS: powerbi_order_items.csv: unique key
+PASS: powerbi_dates.csv: expected row count
+PASS: powerbi_dates.csv: no missing key components
+PASS: powerbi_dates.csv: unique key
+PASS: powerbi_states.csv: expected row count
+PASS: powerbi_states.csv: no missing key components
+PASS: powerbi_states.csv: unique key
+PASS: powerbi_products.csv: expected row count
+PASS: powerbi_products.csv: no missing key components
+PASS: powerbi_products.csv: unique key
+PASS: Relationship: purchase_date -> date
+PASS: Relationship: purchase_date -> date
+PASS: Relationship: customer_state -> customer_state
+PASS: Relationship: customer_state -> customer_state
+PASS: Relationship: product_id -> product_id
+PASS: Relationship: order_id -> order_id
+PASS: Calendar dates are continuous
+PASS: Delivered merchandise values are present
+PASS: Delivered orders: 96,478
+PASS: Eligible orders: 96,470
+PASS: Late orders: 6,534
+PASS: Delivered merchandise sales match the SQL baseline
+PASS: Order and item files have matching delivered sales

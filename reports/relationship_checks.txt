@@ -1,0 +1,69 @@
+OLIST KEY AND RELATIONSHIP CHECKS
+
+PROPOSED KEYS
+orders: order_id
+  Rows with a missing key component: 0
+  Repeated key combinations beyond first: 0
+customers: customer_id
+  Rows with a missing key component: 0
+  Repeated key combinations beyond first: 0
+products: product_id
+  Rows with a missing key component: 0
+  Repeated key combinations beyond first: 0
+sellers: seller_id
+  Rows with a missing key component: 0
+  Repeated key combinations beyond first: 0
+items: order_id, order_item_id
+  Rows with a missing key component: 0
+  Repeated key combinations beyond first: 0
+payments: order_id, payment_sequential
+  Rows with a missing key component: 0
+  Repeated key combinations beyond first: 0
+reviews: review_id, order_id
+  Rows with a missing key component: 0
+  Repeated key combinations beyond first: 0
+translations: product_category_name
+  Rows with a missing key component: 0
+  Repeated key combinations beyond first: 0
+
+RELATIONSHIP CHECKS
+orders.customer_id -> customers.customer_id
+  Missing source values: 0
+  Rows with a non-missing but unmatched value: 0
+  Distinct unmatched values: 0
+items.order_id -> orders.order_id
+  Missing source values: 0
+  Rows with a non-missing but unmatched value: 0
+  Distinct unmatched values: 0
+items.product_id -> products.product_id
+  Missing source values: 0
+  Rows with a non-missing but unmatched value: 0
+  Distinct unmatched values: 0
+items.seller_id -> sellers.seller_id
+  Missing source values: 0
+  Rows with a non-missing but unmatched value: 0
+  Distinct unmatched values: 0
+payments.order_id -> orders.order_id
+  Missing source values: 0
+  Rows with a non-missing but unmatched value: 0
+  Distinct unmatched values: 0
+reviews.order_id -> orders.order_id
+  Missing source values: 0
+  Rows with a non-missing but unmatched value: 0
+  Distinct unmatched values: 0
+products.product_category_name -> translations.product_category_name
+  Missing source values: 610
+  Rows with a non-missing but unmatched value: 13
+  Distinct unmatched values: 2
+  Example unmatched values: ['pc_gamer', 'portateis_cozinha_e_preparadores_de_alimentos']
+
+MULTIPLE RECORDS PER ORDER
+items:
+  Orders with more than one record: 9,803
+  Maximum records for one order: 21
+payments:
+  Orders with more than one record: 2,961
+  Maximum records for one order: 29
+reviews:
+  Orders with more than one record: 547
+  Maximum records for one order: 3

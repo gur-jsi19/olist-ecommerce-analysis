@@ -1,0 +1,11 @@
+DIMENSION CLEANING SUMMARY
+customers_clean.csv: 99,441 rows
+sellers_clean.csv: 3,095 rows
+products_clean.csv: 32,951 rows
+Distinct individual customers: 96,096
+Products with missing source category: 610
+Products with a category but no English translation: 13
+
+Untranslated categories:
+                                     pc_gamer
+portateis_cozinha_e_preparadores_de_alimentos

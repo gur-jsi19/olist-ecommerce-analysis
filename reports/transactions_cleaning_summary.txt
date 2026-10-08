@@ -1,0 +1,18 @@
+TRANSACTION CLEANING SUMMARY
+Item input rows: 112,650
+Item output rows: 112,650
+Payment input rows: 103,886
+Payment output rows: 103,886
+Distinct orders with items: 98,666
+Distinct orders with payments: 99,440
+Zero freight records retained: 383
+Zero payment records retained: 9
+Zero installment records retained: 2
+
+Payment type counts:
+payment_type
+credit_card    76795
+boleto         19784
+voucher         5775
+debit_card      1529
+not_defined        3
